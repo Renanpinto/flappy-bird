@@ -94,7 +94,7 @@ const flappyBird = {
 
   atualiza() {
     flappyBird.velocidade += this.gravidade
-    flappyBird.y += this.velocidade
+    flappyBird.y += flappyBird.velocidade
   },
 
   desenha() {
@@ -132,6 +132,10 @@ const Telas = {
       planoDeFundo.desenha();
       chao.desenha();
       flappyBird.desenha();
+    },
+    click() {
+      flappyBird.y -= 150
+      flappyBird.velocidade = 0
     },
     atualiza() {
       flappyBird.atualiza();
