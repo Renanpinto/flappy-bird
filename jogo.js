@@ -6,6 +6,25 @@ sprites.src = './sprites.png';
 const canvas = document.querySelector('canvas');
 const contexto = canvas.getContext('2d');
 
+const telaDeInicio = {
+  spriteX: 134,
+  spriteY: 0,
+  largura: 174,
+  altura: 152,
+  x: canvas.width / 2 - 174 / 2,
+  y: 50,
+
+  desenha() {
+    contexto.drawImage(
+      sprites,
+      telaDeInicio.spriteX, telaDeInicio.spriteY,
+      telaDeInicio.largura, telaDeInicio.altura, // Tamanho do recorte na Sprite
+      telaDeInicio.x, telaDeInicio.y,
+      telaDeInicio.largura, telaDeInicio.altura
+    );
+  }
+}
+
 const planoDeFundo = {
   spriteX: 390,
   spriteY: 0,
@@ -16,7 +35,7 @@ const planoDeFundo = {
 
   desenha() {
     contexto.fillStyle = '#70c5ce'
-    contexto.fillRect(0,0,canvas.height, canvas.width)
+    contexto.fillRect(0, 0, canvas.height, canvas.width)
 
     contexto.drawImage(
       sprites,
@@ -25,7 +44,7 @@ const planoDeFundo = {
       planoDeFundo.x, planoDeFundo.y,
       planoDeFundo.largura, planoDeFundo.altura
     );
-    
+
     contexto.drawImage(
       sprites,
       planoDeFundo.spriteX, planoDeFundo.spriteY,
@@ -71,7 +90,7 @@ const flappyBird = {
   x: 10,
   y: 50,
   gravidade: 0.2,
-  velocidade:0,
+  velocidade: 0,
 
   atualiza() {
     flappyBird.velocidade += this.gravidade
@@ -89,17 +108,48 @@ const flappyBird = {
   }
 }
 
+let telaAtiva = {}
+function mudaParaTela(novaTela) {
+  telaAtiva = novaTela
+}
 
-
+const Telas = {
+  INICIO: {
+    desenha() {
+      planoDeFundo.desenha();
+      chao.desenha();
+      flappyBird.desenha();
+      telaDeInicio.desenha();
+    },
+    click() {
+      console.log(JSON.stringify(telaAtiva))
+      mudaParaTela(Telas.JOGO)
+    },
+    atualiza(){}
+  },
+  JOGO: {
+    desenha() {
+      planoDeFundo.desenha();
+      chao.desenha();
+      flappyBird.desenha();
+    },
+    atualiza() {
+      flappyBird.atualiza();
+    }
+  }
+}
 
 
 function loop() {
-  planoDeFundo.desenha();
-  chao.desenha();
-  flappyBird.desenha();
-  flappyBird.atualiza();
+  console.log(JSON.stringify(telaAtiva))
+  telaAtiva.desenha();
+  telaAtiva.atualiza();
 
   requestAnimationFrame(loop);
 }
 
+window.addEventListener('click', () => {
+  if(telaAtiva.click()) telaAtiva.click();
+})
+mudaParaTela(Telas.INICIO)
 loop();
