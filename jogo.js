@@ -85,51 +85,6 @@ const chao = {
   }
 }
 
-function novoFlappyBird() {
-  const flappyBird = {
-    spriteX: 0,
-    spriteY: 0,
-    largura: 33,
-    altura: 24,
-    x: 10,
-    y: 50,
-    gravidade: 0.2,
-    velocidade: 0,
-    pulo: 4.6,
-    
-    pula() {
-      this.velocidade = -this.pulo
-    },
-  
-    atualiza() {
-      if(colisao(flappyBird, chao)){
-        console.log("COLIDIU")
-        som_HIT.play();
-        mudaParaTela(Telas.INICIO)
-      }
-      flappyBird.velocidade += this.gravidade
-      flappyBird.y += flappyBird.velocidade
-    },
-  
-    desenha() {
-      contexto.drawImage(
-        sprites,
-        flappyBird.spriteX, flappyBird.spriteY,
-        flappyBird.largura, flappyBird.altura, // Tamanho do recorte na Sprite
-        flappyBird.x, flappyBird.y,
-        flappyBird.largura, flappyBird.altura
-      );
-    }
-  }
-  return flappyBird;
-}
-
-function colisao(flappyBird, chao){
-  const y = flappyBird.y;
-  const altura = flappyBird.altura
-  return y+altura >= chao.y;
-}
-
 function mudaParaTela(novaTela) {
   telaAtiva = novaTela;
 
@@ -142,7 +97,7 @@ const globais = {}
 const Telas = {
   INICIO: {
     inicializa() {
-      globais.flappyBird = novoFlappyBird();
+      globais.flappyBird = new FlappyBird();
     },
     desenha() {
       planoDeFundo.desenha();
@@ -183,3 +138,4 @@ window.addEventListener('click', () => {
 })
 mudaParaTela(Telas.INICIO)
 loop();
+
