@@ -9,6 +9,24 @@ class FlappyBird {
     gravidade: 0.2,
     velocidade: 0,
     pulo: 4.6,
+    frameAtual: 0
+  };
+
+  movimentos = [
+    { spriteX: 0, spriteY: 0 }, // asa pra cima
+    { spriteX: 0, spriteY: 26 }, // asa no meio
+    { spriteX: 0, spriteY: 52 } // asa pra baixo
+  ]
+
+  atualizaFrame() {
+    const intervaloFrames = 10;
+    
+    if ((frames % intervaloFrames) === 0) {
+      const baseIncremento = 1;
+      const incremento = baseIncremento + this.flappyBird.frameAtual;
+      const baseRepeticao = this.movimentos.length;
+      this.flappyBird.frameAtual = incremento % baseRepeticao
+    }
   };
 
   pula() {
@@ -16,7 +34,7 @@ class FlappyBird {
   };
 
   atualiza() {
-    if (this.colisao(this.flappyBird, chao)) {
+    if (this.colisao(this.flappyBird, globais.chao)) {
       console.log("COLIDIU")
       som_HIT.play();
       mudaParaTela(Telas.INICIO)
@@ -26,15 +44,17 @@ class FlappyBird {
   };
 
   desenha() {
+    this.atualizaFrame()
+    const { spriteX, spriteY } = this.movimentos[this.flappyBird.frameAtual]
     contexto.drawImage(
       sprites,
-      this.flappyBird.spriteX, this.flappyBird.spriteY,
+      spriteX, spriteY,
       this.flappyBird.largura, this.flappyBird.altura, // Tamanho do recorte na Sprite
       this.flappyBird.x, this.flappyBird.y,
       this.flappyBird.largura, this.flappyBird.altura
     );
   };
-  
+
   colisao(flappyBird, chao) {
     const y = flappyBird.y;
     const altura = flappyBird.altura
