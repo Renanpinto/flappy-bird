@@ -55,7 +55,7 @@ class FlappyBird {
     );
   };
 
-  colisao(flappyBird, chao) {
+  colisao(flappyBird, {chao}) {
     const y = flappyBird.y;
     const altura = flappyBird.altura
     return y + altura >= chao.y;

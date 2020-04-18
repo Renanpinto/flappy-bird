@@ -59,45 +59,6 @@ const planoDeFundo = {
   }
 }
 
-function criaChao() {
-  const chao = {
-    spriteX: 0,
-    spriteY: 610,
-    largura: 224,
-    altura: 112,
-    x: 0,
-    y: canvas.height - 112,
-
-    desenha() {
-      contexto.drawImage(
-        sprites,
-        chao.spriteX, chao.spriteY,
-        chao.largura, chao.altura, // Tamanho do recorte na Sprite
-        chao.x, chao.y,
-        chao.largura, chao.altura
-      );
-
-      contexto.drawImage(
-        sprites,
-        chao.spriteX, chao.spriteY,
-        chao.largura, chao.altura, // Tamanho do recorte na Sprite
-        (chao.x + chao.largura), chao.y,
-        chao.largura, chao.altura
-      );
-    },
-
-    atualiza() {
-      const movimentoDoChao = 1
-      const repeteEm = chao.largura / 2
-      const movimentacao = chao.x - movimentoDoChao
-
-      chao.x = movimentacao % repeteEm
-    }
-  }
-  return chao;
-
-}
-
 function mudaParaTela(novaTela) {
   telaAtiva = novaTela;
 
@@ -111,7 +72,7 @@ const Telas = {
   INICIO: {
     inicializa() {
       globais.flappyBird = new FlappyBird();
-      globais.chao = criaChao();
+      globais.chao = new Chao();
     },
     desenha() {
       planoDeFundo.desenha();
