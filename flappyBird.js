@@ -1,16 +1,16 @@
 class FlappyBird {
-  flappyBird = {
-    spriteX: 0,
-    spriteY: 0,
-    largura: 33,
-    altura: 24,
-    x: 10,
-    y: 50,
-    gravidade: 0.2,
-    velocidade: 0,
-    pulo: 4.6,
-    frameAtual: 0
-  };
+
+  spriteX = 0;
+  spriteY = 0;
+  largura = 33;
+  altura = 24;
+  x = 10;
+  y = 50;
+  gravidade = 0.2;
+  velocidade = 0;
+  pulo = 4.6;
+  frameAtual = 0
+
 
   movimentos = [
     { spriteX: 0, spriteY: 0 }, // asa pra cima
@@ -20,42 +20,46 @@ class FlappyBird {
 
   atualizaFrame() {
     const intervaloFrames = 10;
-    
+
     if ((frames % intervaloFrames) === 0) {
       const baseIncremento = 1;
-      const incremento = baseIncremento + this.flappyBird.frameAtual;
+      const incremento = baseIncremento + this.frameAtual;
       const baseRepeticao = this.movimentos.length;
-      this.flappyBird.frameAtual = incremento % baseRepeticao
+      this.frameAtual = incremento % baseRepeticao
     }
   };
 
   pula() {
-    this.flappyBird.velocidade = -this.flappyBird.pulo
+    som_PULO.play()
+    this.velocidade = -this.pulo
   };
 
   atualiza() {
-    if (this.colisao(this.flappyBird, globais.chao)) {
+    if (this.colisao(this, globais.chao)) {
       console.log("COLIDIU")
       som_HIT.play();
-      mudaParaTela(Telas.INICIO)
+      setTimeout(() => {
+        mudaParaTela(Telas.INICIO);
+      }, 500);
+      return;
     }
-    this.flappyBird.velocidade += this.flappyBird.gravidade
-    this.flappyBird.y += this.flappyBird.velocidade
+    this.velocidade += this.gravidade
+    this.y += this.velocidade
   };
 
   desenha() {
     this.atualizaFrame()
-    const { spriteX, spriteY } = this.movimentos[this.flappyBird.frameAtual]
+    const { spriteX, spriteY } = this.movimentos[this.frameAtual]
     contexto.drawImage(
       sprites,
       spriteX, spriteY,
-      this.flappyBird.largura, this.flappyBird.altura, // Tamanho do recorte na Sprite
-      this.flappyBird.x, this.flappyBird.y,
-      this.flappyBird.largura, this.flappyBird.altura
+      this.largura, this.altura, // Tamanho do recorte na Sprite
+      this.x, this.y,
+      this.largura, this.altura
     );
   };
 
-  colisao(flappyBird, {chao}) {
+  colisao(flappyBird, { chao }) {
     const y = flappyBird.y;
     const altura = flappyBird.altura
     return y + altura >= chao.y;
