@@ -16,6 +16,7 @@ const som_PONTO = new Audio();
 som_PONTO.src = './efeitos/ponto.wav'
 
 let frames = 0
+
 const telaDeInicio = {
   spriteX: 134,
   spriteY: 0,
@@ -31,6 +32,25 @@ const telaDeInicio = {
       telaDeInicio.largura, telaDeInicio.altura, // Tamanho do recorte na Sprite
       telaDeInicio.x, telaDeInicio.y,
       telaDeInicio.largura, telaDeInicio.altura
+    );
+  }
+}
+
+const telaDeGameOver = {
+  spriteX: 134,
+  spriteY: 153,
+  largura: 226,
+  altura: 200,
+  x: canvas.width / 2 - 226 / 2,
+  y: 50,
+
+  desenha() {
+    contexto.drawImage(
+      sprites,
+      telaDeGameOver.spriteX, telaDeGameOver.spriteY,
+      telaDeGameOver.largura, telaDeGameOver.altura, // Tamanho do recorte na Sprite
+      telaDeGameOver.x, telaDeGameOver.y,
+      telaDeGameOver.largura, telaDeGameOver.altura
     );
   }
 }
@@ -132,7 +152,7 @@ function criaCanos() {
       const cabecaFlappyBird = globais.flappyBird.y;
       const peFlappyBird = globais.flappyBird.y + globais.flappyBird.altura;
       
-      if(globais.flappyBird.x >= par.x) {
+      if((globais.flappyBird.x + globais.flappyBird.largura -5) >= par.x) {
         if(cabecaFlappyBird <= par.canoCeu.y) {
           return true
         }
@@ -165,9 +185,7 @@ function criaCanos() {
         if (canos.colidiu(par)) {
           console.log('colidiu')
           som_HIT.play();
-          setTimeout(() => {
-            mudaParaTela(Telas.INICIO);
-          }, 500);
+          mudaParaTela(Telas.GAME_OVER);
           return;
         }
 
@@ -180,6 +198,28 @@ function criaCanos() {
     }
   }
   return canos
+}
+
+function criaPlacar() {
+  const placar = {
+    pontuacao: 0,
+    desenha() {
+      contexto.font = '35px "VT323"';
+      contexto.textAlign = 'right';
+      contexto.fillStyle  = 'white';
+      contexto.fillText(`${placar.pontuacao}`, canvas.width - 10, 35)
+    },
+    atualiza() {
+      
+      const intervaloFrames = 10;
+      const passouIntervalo = frames % intervaloFrames === 0;
+      
+      if(passouIntervalo) {
+        placar.pontuacao = placar.pontuacao + 1;
+      }
+    }
+  }
+  return placar;
 }
 const Telas = {
   INICIO: {
@@ -203,11 +243,15 @@ const Telas = {
     }
   },
   JOGO: {
+    inicializa() {
+      globais.placar = criaPlacar();
+    },
     desenha() {
       planoDeFundo.desenha();
       globais.canos.desenha();
       globais.flappyBird.desenha();
       globais.chao.desenha();
+      globais.placar.desenha()
     },
     click() {
       globais.flappyBird.pula();
@@ -215,9 +259,22 @@ const Telas = {
     atualiza() {
       globais.flappyBird.atualiza();
       globais.chao.atualiza();
-      globais.canos.atualiza()
+      globais.canos.atualiza();
+      globais.placar.atualiza();
+    }
+  },
+  GAME_OVER: {
+    desenha() {
+      telaDeGameOver.desenha();
+    },
+    click() {
+      mudaParaTela(Telas.INICIO)
+    },
+    atualiza() {
+
     }
   }
+
 }
 
 

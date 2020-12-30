@@ -20,8 +20,9 @@ class FlappyBird {
 
   atualizaFrame() {
     const intervaloFrames = 10;
+    const passouIntervalo = frames % intervaloFrames === 0
 
-    if ((frames % intervaloFrames) === 0) {
+    if (passouIntervalo) {
       const baseIncremento = 1;
       const incremento = baseIncremento + this.frameAtual;
       const baseRepeticao = this.movimentos.length;
@@ -36,10 +37,9 @@ class FlappyBird {
 
   atualiza() {
     if (this.colisao(this, globais.chao)) {
-      console.log("COLIDIU")
       som_HIT.play();
       setTimeout(() => {
-        mudaParaTela(Telas.INICIO);
+        mudaParaTela(Telas.GAME_OVER);
       }, 500);
       return;
     }
